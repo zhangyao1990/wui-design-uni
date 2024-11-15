@@ -1,0 +1,338 @@
+@import "../common/abstracts/variable";
+@import "../common/abstracts/mixin";
+
+.wui-theme-dark {
+  @include b(input) {
+    background: $-dark-background2;
+
+    &::after {
+      background: $-dark-color-gray;
+    }
+
+    @include when(not-empty) {
+      &:not(.is-disabled) {
+        &::after {
+          background-color: $-dark-color;
+        }
+      }
+    }
+
+
+    @include e(inner) {
+      color: $-dark-color;
+
+      &::-webkit-input-placeholder {
+        color: $-dark-color3;
+      }
+    }
+
+    @include e(placeholder) {
+      color: $-dark-color3;
+    }
+
+    @include e(count) {
+      color: $-dark-color3;
+      background: transparent;
+    }
+
+    @include e(count-current) {
+      color: $-dark-color;
+    }
+
+    :deep(.wui-input__icon),
+    :deep(.wui-input__clear) {
+      color: $-dark-color;
+      background: transparent;
+    }
+
+    @include when(cell) {
+      background-color: $-dark-background2;
+      line-height: $-cell-line-height;
+
+      @include when(border) {
+        @include halfPixelBorder("top", $-input-cell-padding, $-dark-border-color);
+      }
+    }
+
+    @include when(disabled) {
+
+      .wui-input__inner {
+        color: $-dark-color-gray;
+        background: transparent;
+      }
+    }
+
+
+    @include e(label) {
+      color: $-dark-color;
+    }
+  }
+}
+
+@include b(input) {
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+  background: $-input-bg;
+
+  &::after {
+    position: absolute;
+    content: "";
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: $-input-border-color;
+    transform: scaleY(0.5);
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  @include when(not-empty) {
+    &:not(.is-disabled) {
+      &::after {
+        background-color: $-input-not-empty-border-color;
+      }
+    }
+  }
+
+  @include e(label) {
+    position: relative;
+    display: flex;
+    width: $-input-cell-label-width;
+    color: $-cell-title-color;
+    margin-right: $-cell-padding;
+    box-sizing: border-box;
+    font-size: $-input-fs;
+    flex-shrink: 0;
+
+    @include when(required) {
+      padding-left: 12px;
+
+      &::after {
+        position: absolute;
+        left: 0;
+        top: 2px;
+        content: "*";
+        font-size: $-cell-required-size;
+        line-height: 1.1;
+        color: $-cell-required-color;
+      }
+    }
+  }
+
+  @include e(label-inner) {
+    display: inline-block;
+    font-size: $-input-fs;
+    line-height: $-cell-line-height;
+  }
+
+  @include e(body) {
+    flex: 1;
+  }
+
+  @include e(value) {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+
+  @include e(prefix) {
+    margin-right: $-input-icon-margin;
+    font-size: $-input-fs;
+    line-height: initial;
+
+    :deep(.wui-input__icon),
+    :deep(.wui-input__clear) {
+      margin-left: 0;
+    }
+  }
+
+  @include e(suffix) {
+    flex-shrink: 0;
+    margin-left: $-input-icon-margin;
+    line-height: initial;
+  }
+
+  @include e(error-message){
+    color: $-form-item-error-message-color;
+    font-size: $-form-item-error-message-font-size;
+    line-height: $-form-item-error-message-line-height;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  @include when(disabled) {
+
+    .wui-input__inner {
+      color: $-input-disabled-color;
+      background: transparent;
+    }
+  }
+
+  @include when(error) {
+
+    .wui-input__inner {
+      color: $-input-error-color;
+      background: transparent;
+    }
+  }
+
+  @include when(no-border) {
+    &::after {
+      display: none;
+    }
+
+    .wui-input__inner {
+      height: $-input-inner-height-no-border;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  @include when(cell) {
+    display: flex;
+    align-items: flex-start;
+    padding: $-input-cell-padding $-input-padding;
+    background-color: $-input-cell-bg;
+
+    &.is-error::after {
+      background: $-input-cell-border-color;
+    }
+
+    :deep(.wui-input__icon),
+    :deep(.wui-input__clear) {
+      display: inline-flex;
+      align-items: center;
+      height: $-input-cell-height;
+      line-height: $-input-cell-height;
+    }
+
+    .wui-input__prefix {
+      display: inline-block;
+      margin-right: $-cell-icon-right;
+    }
+
+    .wui-input__inner {
+      height: $-input-cell-height;
+    }
+
+    &.wui-input::after {
+      display: none;
+    }
+
+
+    @include when(center) {
+      align-items: center;
+    }
+
+    @include when(border) {
+      @include halfPixelBorder("top", $-input-cell-padding);
+    }
+  }
+
+  @include when(large) {
+    padding: $-input-cell-padding-large;
+
+    .wui-input__prefix {
+      font-size: $-input-fs-large;
+    }
+
+    .wui-input__label-inner {
+      font-size: $-input-fs-large;
+    }
+
+    .wui-input__inner {
+      font-size: $-input-fs-large;
+    }
+
+
+    .wui-input__count {
+      font-size: $-input-count-fs-large;
+    }
+
+    :deep(.wui-input__icon),
+    :deep(.wui-input__clear) {
+      font-size: $-input-icon-size-large;
+    }
+
+  }
+
+
+  @include e(inner) {
+    flex: 1;
+    height: $-input-inner-height;
+    font-size: $-input-fs;
+    color: $-input-color;
+    outline: none;
+    border: none;
+    background: none;
+    padding: 0;
+    box-sizing: border-box;
+
+    &::-webkit-input-placeholder {
+      color: $-input-placeholder-color;
+    }
+
+    @include when(align-right) {
+      text-align: right;
+    }
+  }
+
+  @include e(readonly-mask) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+  }
+
+
+  @include edeep(icon) {
+    margin-left: $-input-icon-margin;
+    font-size: $-input-icon-size;
+    color: $-input-icon-color;
+    vertical-align: middle;
+    background: $-input-bg;
+  }
+
+  @include edeep(clear) {
+    margin-left: $-input-icon-margin;
+    font-size: $-input-icon-size;
+    color: $-input-clear-color;
+    vertical-align: middle;
+    background: $-input-bg;
+  }
+
+  @include e(count) {
+    margin-left: 15px;
+    font-size: $-input-count-fs;
+    color: $-input-count-color;
+    vertical-align: middle;
+    background: $-input-bg;
+  }
+
+  @include e(count-current) {
+    color: $-input-count-current-color;
+
+    @include when(error) {
+      color: $-input-error-color;
+    }
+  }
+
+
+  @include e(placeholder) {
+    color: $-input-placeholder-color;
+
+    &.is-error {
+      color: $-input-error-color;
+    }
+  }
+
+  .wui-input__count,
+  .wui-input__count-current {
+    display: inline-flex;
+  }
+}

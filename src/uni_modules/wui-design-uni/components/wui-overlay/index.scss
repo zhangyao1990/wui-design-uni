@@ -1,0 +1,17 @@
+@import "./../common/abstracts/_mixin.scss";
+@import "./../common/abstracts/variable.scss";
+
+.wui-theme-dark {
+  @include b(overlay) {
+    background: $-overlay-bg-dark;
+  }
+}
+
+@include b(overlay) {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: $-overlay-bg;
+}

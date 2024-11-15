@@ -1,0 +1,180 @@
+<template>
+  <view :class="`wui-popover ${customClass}`" :style="customStyle" id="popover" @click.stop="popover.noop">
+    <!-- 使用插槽时无法获取正确宽高 -->
+    <view class="wui-popover__pos wui-popover__hidden" id="pos">
+      <view :class="`wui-popover__container ${customPop}`">
+        <view v-if="!useContentSlot && mode === 'normal'" class="wui-popover__inner">
+          {{ content }}
+        </view>
+        <view v-if="!useContentSlot && mode === 'menu' && typeof content === 'object'" class="wui-popover__menu">
+          <view v-for="(item, index) in content" :key="index" class="wui-popover__menu-inner" @click="menuClick(index)">
+            <wui-icon v-if="item.iconClass" :name="item.iconClass" custom-class="wui-popover__icon" />
+            <text>{{ item.content }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <wui-transition custom-class="wui-popover__pos" :custom-style="popover.popStyle.value" :show="showPopover" name="fade" :duration="200">
+      <view :class="`wui-popover__container ${customPop}`">
+        <view
+          v-if="props.visibleArrow"
+          :class="`wui-popover__arrow ${popover.arrowClass.value} ${customArrow}`"
+          :style="popover.arrowStyle.value"
+        ></view>
+        <!-- 普通模式 -->
+        <view v-if="!useContentSlot && mode === 'normal'" class="wui-popover__inner">
+          {{ content }}
+        </view>
+        <!-- 列表模式 -->
+        <view v-if="!useContentSlot && mode === 'menu'" class="wui-popover__menu">
+          <view
+            v-for="(item, index) in content"
+            :key="index"
+            class="wui-popover__menu-inner"
+            @click="menuClick(index)"
+            :style="index === 0 ? 'border-top: none' : ''"
+          >
+            <wui-icon v-if="typeof item === 'object' && item.iconClass" :name="item.iconClass" custom-class="wui-popover__icon" />
+            <view style="display: inline-block">{{ typeof item === 'object' && item.content ? item.content : '' }}</view>
+          </view>
+        </view>
+        <!-- 用户自定义样式 -->
+        <slot name="content" v-else />
+      </view>
+      <wui-icon v-if="showClose" name="close" custom-class="wui-popover__close-icon" @click="toggle"></wui-icon>
+    </wui-transition>
+    <view @click="toggle" class="wui-popover__target" id="target">
+      <slot />
+    </view>
+  </view>
+</template>
+
+<script lang="ts">
+export default {
+  name: 'wui-popover',
+  options: {
+    virtualHost: true,
+    addGlobalClass: true,
+    styleIsolation: 'shared'
+  }
+}
+</script>
+
+<script lang="ts" setup>
+import wuiIcon from '../wui-icon/wui-icon.vue'
+import wuiTransition from '../wui-transition/wui-transition.vue'
+import { getCurrentInstance, inject, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { usePopover } from '../composables/usePopover'
+import { closeOther, pushToQueue, removeFromQueue } from '../common/clickoutside'
+import { type Queue, queueKey } from '../composables/useQueue'
+import { popoverProps, type PopoverExpose } from './types'
+import { isArray } from '../common/util'
+
+const props = defineProps(popoverProps)
+const emit = defineEmits(['update:modelValue', 'menuclick', 'change', 'open', 'close'])
+
+const queue = inject<Queue | null>(queueKey, null)
+const selector: string = 'popover'
+const { proxy } = getCurrentInstance() as any
+const popover = usePopover()
+
+const showPopover = ref<boolean>(false) // 控制popover显隐
+
+watch(
+  () => props.content,
+  (newVal) => {
+    const { mode } = props
+    if (mode === 'normal' && typeof newVal !== 'string') {
+      console.error('The value type must be a string type in normal mode')
+    } else if (mode === 'menu' && !isArray(newVal)) {
+      console.error('The value type must be a Array type in menu mode')
+    }
+  }
+)
+
+watch(
+  () => props.placement,
+  () => {
+    popover.init(props.placement, props.visibleArrow, selector)
+  }
+)
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    showPopover.value = newValue
+  }
+)
+
+watch(
+  () => showPopover.value,
+  (newValue) => {
+    if (newValue) {
+      popover.control(props.placement, props.offset)
+      if (queue && queue.closeOther) {
+        queue.closeOther(proxy)
+      } else {
+        closeOther(proxy)
+      }
+    }
+    popover.showStyle.value = newValue ? 'display: inline-block;' : 'display: none;'
+    emit('change', { show: newValue })
+    emit(`${newValue ? 'open' : 'close'}`)
+  }
+)
+
+onMounted(() => {
+  popover.init(props.placement, props.visibleArrow, selector)
+})
+
+onBeforeMount(() => {
+  if (queue && queue.pushToQueue) {
+    queue.pushToQueue(proxy)
+  } else {
+    pushToQueue(proxy)
+  }
+  popover.showStyle.value = showPopover.value ? 'opacity: 1;' : 'opacity: 0;'
+})
+
+onBeforeUnmount(() => {
+  if (queue && queue.removeFromQueue) {
+    queue.removeFromQueue(proxy)
+  } else {
+    removeFromQueue(proxy)
+  }
+})
+
+function menuClick(index: number) {
+  updateModelValue(false)
+  emit('menuclick', {
+    item: (props.content as Array<Record<string, any>>)[index],
+    index
+  })
+}
+
+function toggle() {
+  if (props.disabled) return
+  updateModelValue(!showPopover.value)
+}
+
+function open() {
+  updateModelValue(true)
+}
+
+function close() {
+  updateModelValue(false)
+}
+
+function updateModelValue(value: boolean) {
+  showPopover.value = value
+  emit('update:modelValue', value)
+}
+
+defineExpose<PopoverExpose>({
+  open,
+  close
+})
+</script>
+<style lang="scss" scoped>
+@import './index.scss';
+</style>

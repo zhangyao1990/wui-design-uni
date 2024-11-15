@@ -1,0 +1,9 @@
+@import '../common/abstracts/variable';
+@import '../common/abstracts/mixin';
+
+
+@include b(tab) {
+  width: 100%;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}

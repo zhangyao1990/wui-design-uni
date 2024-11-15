@@ -1,0 +1,10 @@
+@import "../common/abstracts/variable";
+@import "../common/abstracts/mixin";
+
+.wui-theme-dark {
+  @include b(form) {
+  }
+}
+
+@include b(form) {
+}

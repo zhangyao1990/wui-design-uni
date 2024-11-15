@@ -1,0 +1,37 @@
+@import '../common/abstracts/variable';
+@import '../common/abstracts/mixin';
+
+
+
+@include b(text) {
+
+  @include when(bold) {
+    font-weight: bold;
+  }
+
+  @for $i from 1 through 5 {
+    &.is-lines-#{$i} {
+      @include multiEllipsis($i);
+    }
+  }
+
+  @include when(default) {
+    color: $-text-info-color;
+  }
+
+  @include when(primary) {
+    color: $-text-primary-color;
+  }
+
+  @include when(error) {
+    color: $-text-error-color;
+  }
+
+  @include when(warning) {
+    color: $-text-warning-color;
+  }
+
+  @include when(success) {
+    color: $-text-success-color;
+  }
+}

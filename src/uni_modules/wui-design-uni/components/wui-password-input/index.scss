@@ -1,0 +1,124 @@
+@import "../common/abstracts/variable";
+@import "../common/abstracts/mixin";
+
+.wui-theme-dark {
+  @include b(password-input) {
+    @include e(item) {
+      color: $-dark-color;
+      background: $-dark-background2;
+
+      @include when(border) {
+        border-color: $-dark-border-color;
+      }
+    }
+
+    @include e(mask) {
+      background-color: $-dark-color;
+    }
+
+    @include e(cursor) {
+      background-color: $-dark-color;
+    }
+
+    @include e(info) {
+      color: $-dark-color;
+
+      @include when(border) {
+        color: $-dark-color2;
+      }
+    }
+  }
+}
+
+@include b(password-input) {
+  position: relative;
+  margin: 0 $-password-input-margin;
+  user-select: none;
+
+  @include e(security) {
+    display: flex;
+    width: 100%;
+    height: $-password-input-height;
+    cursor: pointer;
+  }
+
+  @include e(item) {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: $-password-input-text-color;
+    font-size: $-password-input-font-size;
+    line-height: 1.2;
+    background: $-password-input-background;
+
+    @include when(border) {
+      border: 1px solid $-password-input-border-color;
+
+      &:not(:last-child) {
+        border-right: none;
+      }
+
+      &:first-child {
+        border-top-left-radius: $-password-input-radius;
+        border-bottom-left-radius: $-password-input-radius;
+      }
+
+      &:last-child {
+        border-top-right-radius: $-password-input-radius;
+        border-bottom-right-radius: $-password-input-radius;
+      }
+    }
+  }
+
+  @include e(mask) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $-password-input-dot-size;
+    height: $-password-input-dot-size;
+    background: $-password-input-dot-color;
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+  }
+
+  @include e(cursor) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $-password-input-cursor-width;
+    height: $-password-input-cursor-height;
+    background: $-password-input-cursor-color;
+    transform: translate(-50%, -50%);
+    animation: $-password-input-cursor-duration cursor-flicker infinite;
+  }
+
+  @include e(info) {
+    margin-top: $-password-input-margin;
+    font-size: $-password-input-info-font-size;
+    text-align: center;
+    color: $-password-input-info-color;
+
+    @include when(error) {
+      color: $-password-input-error-info-color;
+    }
+
+  }
+}
+
+@keyframes cursor-flicker {
+  from {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

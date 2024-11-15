@@ -1,0 +1,82 @@
+@import '../common/abstracts/variable';
+@import '../common/abstracts/mixin';
+
+.wui-theme-dark {
+  @include b(collapse-item) {
+    @include halfPixelBorder('top', 0, $-dark-border-color);
+
+
+    @include e(title) {
+      color: $-dark-color;
+    }
+
+    @include e(body) {
+      color: $-dark-color3;
+    }
+
+    @include when(disabled) {
+      .wui-collapse-item__title {
+        color: $-dark-color-gray;
+      }
+      .wui-collapse-item__arrow {
+        color: $-dark-color-gray;
+      }
+    }
+  }
+}
+
+
+@include b(collapse-item) {
+  position: relative;
+  @include halfPixelBorder('top');
+
+
+  @include e(header) {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $-collapse-header-padding;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  @include e(title) {
+    color: $-collapse-title-color;
+    font-weight: $-fw-medium;
+    font-size: $-collapse-title-fs;
+  }
+
+  @include edeep(arrow) {
+    display: block;
+    font-size: $-collapse-arrow-size;
+    color: $-collapse-arrow-color;
+    transition: transform 0.3s;
+
+    @include when(retract) {
+      transform: rotate(-180deg);
+    }
+  }
+
+  @include e(wrapper) {
+    position: relative;
+    overflow: hidden;
+    will-change: height;
+  }
+
+  @include e(body) {
+    color: $-collapse-body-color;
+    font-size: $-collapse-body-fs;
+    padding: $-collapse-body-padding;
+    line-height: 1.43;
+  }
+
+  @include when(disabled) {
+    .wui-collapse-item__title {
+      color: $-collapse-disabled-color;
+    }
+    .wui-collapse-item__arrow {
+      color: $-collapse-disabled-color;
+    }
+  }
+}

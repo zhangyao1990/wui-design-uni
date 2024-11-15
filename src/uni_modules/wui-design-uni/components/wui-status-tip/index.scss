@@ -1,0 +1,37 @@
+@import '../common/abstracts/variable';
+@import '../common/abstracts/mixin';
+
+.wui-theme-dark {
+  background-color: $-dark-background2;
+  @include b(status-tip) {
+    @include e(text) {
+      color: $-dark-color3;
+    }
+  }
+}
+
+@include b(status-tip) {
+  padding: $-statustip-padding;
+  width: 100%;
+  margin: 0 auto;
+  color: $-statustip-color;
+  font-size: $-statustip-fs;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include edeep(image) {
+    margin: 0 auto;
+    width: 160px;
+    height: 160px;
+  }
+  @include e(text) {
+    margin: 20px auto 0;
+    font-size: $-statustip-fs;
+    line-height: $-statustip-line-height;
+    color: $-statustip-color;
+    text-align: center;
+    word-break: break-all;
+  }
+}

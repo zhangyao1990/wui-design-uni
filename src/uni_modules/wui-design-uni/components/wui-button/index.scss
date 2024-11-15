@@ -1,0 +1,367 @@
+@import './../common/abstracts/_mixin.scss';
+@import './../common/abstracts/variable.scss';
+
+
+.wui-theme-dark {
+  @include b(button) {
+    @include when(info) {
+      background: $-dark-background4;
+      color: $-dark-color3;
+    }
+
+    @include when(plain) {
+      background: transparent;
+
+      @include when(info) {
+        color: $-dark-color;
+
+        &::after {
+          border-color: $-dark-background5;
+        }
+      }
+    }
+
+    @include when(text) {
+      @include when(disabled) {
+        color: $-dark-color-gray;
+        background: transparent;
+      }
+    }
+
+    @include when(icon) {
+      color: $-dark-color;
+
+      @include when(disabled) {
+        color: $-dark-color-gray;
+        background: transparent;
+      }
+
+    }
+  }
+}
+
+@include b(button) {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  -webkit-appearance: none;
+  outline: none;
+  background: transparent;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0;
+  color: $-button-normal-color;
+  transition: opacity 0.2s;
+  user-select: none;
+  font-weight: normal;
+
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: $-color-black;
+    border: inherit;
+    border-color: $-color-black;
+    border-radius: inherit;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    content: ' ';
+  }
+
+
+  &::after {
+    border: none;
+    border-radius: 0;
+  }
+
+  @include m(active) {
+    &:active::before {
+      opacity: 0.15;
+    }
+  }
+
+  @include when(disabled) {
+    opacity: $-button-disabled-opacity;
+  }
+
+  @include e(loading) {
+    margin-right: 5px;
+    animation: wui-rotate 0.8s linear infinite;
+    animation-duration: 2s;
+  }
+
+  @include e(loading-svg) {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  @include when(loading) {}
+
+  @include when(primary) {
+    background: $-button-primary-bg-color;
+    color: $-button-primary-color;
+  }
+
+  @include when(success) {
+    background: $-button-success-bg-color;
+    color: $-button-success-color;
+  }
+
+  @include when(info) {
+    background: $-button-info-bg-color;
+    color: $-button-info-color;
+  }
+
+  @include when(warning) {
+    background: $-button-warning-bg-color;
+    color: $-button-warning-color;
+  }
+
+  @include when(error) {
+    background: $-button-error-bg-color;
+    color: $-button-error-color;
+  }
+
+  @include when(small) {
+    height: $-button-small-height;
+    padding: $-button-small-padding;
+    border-radius: $-button-small-radius;
+    font-size: $-button-small-fs;
+    font-weight: normal;
+
+    .wui-button__loading {
+      width: $-button-small-loading;
+      height: $-button-small-loading;
+    }
+  }
+
+  @include when(medium) {
+    height: $-button-medium-height;
+    padding: $-button-medium-padding;
+    border-radius: $-button-medium-radius;
+    font-size: $-button-medium-fs;
+
+    @include when(primary) {
+      box-shadow: $-button-medium-box-shadow-size $-button-primary-box-shadow-color;
+    }
+
+    @include when(success) {
+      box-shadow: $-button-medium-box-shadow-size $-button-success-box-shadow-color;
+    }
+
+    @include when(warning) {
+      box-shadow: $-button-medium-box-shadow-size $-button-warning-box-shadow-color;
+    }
+
+    @include when(error) {
+      box-shadow: $-button-medium-box-shadow-size $-button-error-box-shadow-color;
+    }
+
+    @include when(plain) {
+      box-shadow: none;
+    }
+
+    @include when(round) {
+      min-width: 120px;
+
+      @include when(icon) {
+        min-width: 0;
+        border-radius: 50%;
+      }
+
+      @include when(text) {
+        border-radius: 0;
+        min-width: 0;
+      }
+    }
+
+    .wui-button__loading {
+      width: $-button-medium-loading;
+      height: $-button-medium-loading;
+    }
+  }
+
+  @include when(large) {
+    height: $-button-large-height;
+    padding: $-button-large-padding;
+    border-radius: $-button-large-radius;
+    font-size: $-button-large-fs;
+
+    &::after {
+      border-radius: $-button-large-radius;
+    }
+
+    &:not(.is-plain) {
+      @include when(primary) {
+        box-shadow: $-button-large-box-shadow-size $-button-primary-box-shadow-color;
+      }
+
+      @include when(success) {
+        box-shadow: $-button-large-box-shadow-size $-button-success-box-shadow-color;
+      }
+
+      @include when(warning) {
+        box-shadow: $-button-large-box-shadow-size $-button-warning-box-shadow-color;
+      }
+
+      @include when(error) {
+        box-shadow: $-button-large-box-shadow-size $-button-error-box-shadow-color;
+      }
+    }
+
+
+    .wui-button__loading {
+      width: $-button-large-loading;
+      height: $-button-large-loading;
+    }
+  }
+
+
+  @include when(round) {
+    border-radius: 999px;
+  }
+
+  @include when(text) {
+    color: $-button-primary-bg-color;
+    min-width: 0;
+    padding: 4px 0;
+
+    &::after {
+      display: none;
+    }
+
+    &.wui-button--active {
+      opacity: $-button-text-hover-opacity;
+
+      &:active::before {
+        display: none;
+      }
+
+    }
+
+    @include when(disabled) {
+      color: $-button-normal-disabled-color;
+      background: transparent;
+    }
+  }
+
+  @include when(plain) {
+    background: $-button-plain-bg-color;
+    border: 1px solid currentColor;
+
+    @include when(primary) {
+      color: $-button-primary-bg-color;
+    }
+
+    @include when(success) {
+      color: $-button-success-bg-color;
+    }
+
+    @include when(info) {
+      color: $-button-info-plain-normal-color;
+      border-color: $-button-info-plain-border-color;
+    }
+
+    @include when(warning) {
+      color: $-button-warning-bg-color;
+    }
+
+    @include when(error) {
+      color: $-button-error-bg-color;
+    }
+  }
+
+  @include when(hairline) {
+    border-width: 0;
+
+    &.is-plain {
+      @include halfPixelBorderSurround();
+
+      &::before {
+        border-radius: inherit;
+      }
+
+      &::after {
+        border-color: inherit;
+      }
+
+      &.is-round {
+        &::after {
+          border-radius: inherit !important;
+        }
+      }
+
+      &.is-large {
+        &::after {
+          border-radius: calc(2 * $-button-large-radius);
+        }
+      }
+
+      &.is-medium {
+        &::after {
+          border-radius: calc(2 * $-button-medium-radius);
+        }
+      }
+
+      &.is-small {
+        &::after {
+          border-radius: calc(2 * $-button-small-radius);
+        }
+      }
+    }
+  }
+
+  @include when(block) {
+    display: flex;
+  }
+
+  @include when(icon) {
+    width: $-button-icon-size;
+    height: $-button-icon-size;
+    padding: 0;
+    border-radius: 50%;
+    color: $-button-icon-color;
+
+    &::after {
+      display: none;
+    }
+
+    :deep(.wui-button__icon) {
+      margin-right: 0;
+    }
+
+    @include when(disabled) {
+      color: $-button-icon-disabled-color;
+      background: transparent;
+    }
+  }
+
+  @include edeep(icon) {
+    display: block;
+    margin-right: 6px;
+    font-size: $-button-icon-fs;
+    vertical-align: middle;
+  }
+
+  @include e(text) {
+    user-select: none;
+    white-space: nowrap;
+  }
+}
+
+@keyframes wui-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

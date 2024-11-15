@@ -1,0 +1,71 @@
+@import "../common/abstracts/variable.scss";
+@import "../common/abstracts/_mixin.scss";
+.wui-theme-dark {
+  @include b(card) {
+    background-color: $-dark-background2;
+
+    @include when(rectangle) {
+  
+      .wui-card__content {
+        @include halfPixelBorder('top', 0, $-dark-border-color);
+      }
+      .wui-card__footer {
+        @include halfPixelBorder('top', 0, $-dark-border-color);
+      }
+    }
+
+    @include e(title-content) {
+      color: $-dark-color;
+    }
+    @include e(content) {
+      color: $-dark-color3;
+    }
+  }
+}
+
+@include b(card) {
+  padding: $-card-padding;
+  background-color: $-card-bg;
+  line-height: $-card-line-height;
+  margin: $-card-margin;
+  border-radius: $-card-radius;
+  box-shadow: $-card-shadow-color;
+  font-size: $-card-fs;
+  margin-bottom: 12px;
+
+  @include when(rectangle) {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    .wui-card__title-content {
+      font-size: $-card-fs;
+    }
+    .wui-card__content {
+      position: relative;
+      padding: $-card-rectangle-content-padding;
+
+      @include halfPixelBorder('top', 0, $-card-content-border-color);
+    }
+    .wui-card__footer {
+      position: relative;
+      padding: $-card-rectangle-footer-padding;
+
+      @include halfPixelBorder('top', 0, $-card-content-border-color);
+    }
+  }
+  @include e(title-content) {
+    padding: 16px 0;
+    color: $-card-title-color;
+    font-size: $-card-title-fs;
+  }
+  @include e(content) {
+    color: $-card-content-color;
+    line-height: $-card-content-line-height;
+  }
+  @include e(footer) {
+    padding: $-card-footer-padding;
+    text-align: right;
+  }
+} 

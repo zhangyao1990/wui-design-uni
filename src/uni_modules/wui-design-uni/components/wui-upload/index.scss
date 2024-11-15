@@ -1,0 +1,175 @@
+@import "../common/abstracts/variable.scss";
+@import "../common/abstracts/_mixin.scss";
+
+.wui-theme-dark {
+  @include b(upload) {
+    @include e(evoke) {
+      background-color: $-dark-background4;
+      color: $-dark-color3;
+
+      @include when(disabled) {
+        color: $-dark-color-gray;
+      }
+    }
+
+    @include e(file) {
+      background-color: $-dark-background4;
+    }
+
+    @include e(file-name) {
+      color: $-dark-color3;
+    }
+  }
+
+}
+
+@include b(upload) {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+
+  @include e(evoke) {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: $-upload-size;
+    height: $-upload-size;
+    font-size: $-upload-evoke-icon-size;
+    background-color: $-upload-evoke-bg;
+    color: $-upload-evoke-color;
+    margin-bottom: 12px;
+
+    @include when(disabled) {
+      color: $-upload-evoke-disabled-color;
+    }
+  }
+
+  @include e(evoke-num) {
+    font-size: 14px;
+    line-height: 14px;
+    margin-top: 8px;
+  }
+
+  @include edeep(evoke-icon) {
+    width: 32px;
+    height: 32px;
+  }
+
+  @include e(input) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  @include e(preview) {
+    position: relative;
+    width: $-upload-size;
+    height: $-upload-size;
+    margin: 0 12px 12px 0;
+  }
+
+  @include e(preview-list) {
+    display: flex;
+  }
+
+  @include e(picture, file, video) {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @include e(file, video) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $-upload-evoke-bg;
+  }
+
+  @include e(video-icon, file-icon) {
+    font-size: $-upload-cover-icon-size;
+  }
+
+  @include e(file-name, video-name) {
+    width: 100%;
+    font-size: $-upload-file-fs;
+    color: $-upload-file-color;
+    box-sizing: border-box;
+    padding: 0 4px;
+    text-align: center;
+    margin-top: 8px;
+    @include lineEllipsis()
+  }
+
+  @include edeep(video-paly) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: $-color-white;
+
+    &::before {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+    }
+  }
+
+  @include edeep(close) {
+    position: absolute;
+    right: calc($-upload-close-icon-size / 2 * -1);
+    top: calc($-upload-close-icon-size / 2 * -1);
+    font-size: $-upload-close-icon-size;
+    z-index: 1;
+    color: $-upload-close-icon-color;
+    width: $-upload-close-icon-size;
+    height: $-upload-close-icon-size;
+    line-height: $-upload-close-icon-size;
+
+    &::after {
+      position: absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: $-color-white;
+      left: 0;
+      z-index: -1;
+    }
+  }
+
+  @include e(mask) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: $-upload-preview-name-bg;
+  }
+
+  @include e(progress-txt) {
+    font-size: $-upload-progress-fs;
+    line-height: $-upload-progress-fs;
+    margin-top: 9px;
+    color: $-color-white;
+  }
+
+  @include edeep(icon) {
+    font-size: $-upload-preview-icon-size;
+    color: $-color-white;
+  }
+
+  @include e(status-content) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+}

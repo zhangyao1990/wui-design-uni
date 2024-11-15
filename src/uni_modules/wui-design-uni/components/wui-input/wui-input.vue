@@ -1,0 +1,291 @@
+<template>
+  <view :class="rootClass" :style="customStyle" @click="handleClick">
+    <view v-if="label || useLabelSlot" :class="labelClass" :style="labelStyle">
+      <view v-if="prefixIcon || usePrefixSlot" class="wui-input__prefix">
+        <wui-icon v-if="prefixIcon && !usePrefixSlot" custom-class="wui-input__icon" :name="prefixIcon" @click="onClickPrefixIcon" />
+        <slot v-else name="prefix"></slot>
+      </view>
+      <view class="wui-input__label-inner">
+        <template v-if="label">{{ label }}</template>
+        <slot v-else name="label"></slot>
+      </view>
+    </view>
+    <view class="wui-input__body">
+      <view class="wui-input__value">
+        <view v-if="(prefixIcon || usePrefixSlot) && !label" class="wui-input__prefix">
+          <wui-icon v-if="prefixIcon" custom-class="wui-input__icon" :name="prefixIcon" @click="onClickPrefixIcon" />
+          <slot name="prefix"></slot>
+        </view>
+        <input
+          :class="[
+            'wui-input__inner',
+            prefixIcon ? 'wui-input__inner--prefix' : '',
+            showWordCount ? 'wui-input__inner--count' : '',
+            alignRight ? 'is-align-right' : '',
+            customInputClass
+          ]"
+          :type="type"
+          :password="showPassword && !isPwdVisible"
+          v-model="inputValue"
+          :placeholder="placeholderValue"
+          :disabled="disabled || readonly"
+          :maxlength="maxlength"
+          :focus="focused"
+          :confirm-type="confirmType"
+          :confirm-hold="confirmHold"
+          :cursor="cursor"
+          :cursor-spacing="cursorSpacing"
+          :placeholder-style="placeholderStyle"
+          :selection-start="selectionStart"
+          :selection-end="selectionEnd"
+          :adjust-position="adjustPosition"
+          :hold-keyboard="holdKeyboard"
+          :always-embed="alwaysEmbed"
+          :placeholder-class="inputPlaceholderClass"
+          :ignoreCompositionEvent="ignoreCompositionEvent"
+          @input="handleInput"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @confirm="handleConfirm"
+          @keyboardheightchange="handleKeyboardheightchange"
+        />
+        <view v-if="readonly" class="wui-input__readonly-mask" />
+        <view v-if="showClear || showPassword || suffixIcon || showWordCount || $slots.suffix" class="wui-input__suffix">
+          <wui-icon v-if="showClear" custom-class="wui-input__clear" name="error-fill" @click="handleClear" />
+          <wui-icon v-if="showPassword" custom-class="wui-input__icon" :name="isPwdVisible ? 'view' : 'eye-close'" @click="togglePwdVisible" />
+          <view v-if="showWordCount" class="wui-input__count">
+            <text
+              :class="[
+                inputValue && String(inputValue).length > 0 ? 'wui-input__count-current' : '',
+                String(inputValue).length > maxlength! ? 'is-error' : ''
+              ]"
+            >
+              {{ String(inputValue).length }}
+            </text>
+            /{{ maxlength }}
+          </view>
+          <wui-icon v-if="suffixIcon" custom-class="wui-input__icon" :name="suffixIcon" @click="onClickSuffixIcon" />
+          <slot name="suffix"></slot>
+        </view>
+      </view>
+      <view v-if="errorMessage" class="wui-input__error-message">{{ errorMessage }}</view>
+    </view>
+  </view>
+</template>
+
+<script lang="ts">
+export default {
+  name: 'wui-input',
+  options: {
+    virtualHost: true,
+    addGlobalClass: true,
+    styleIsolation: 'shared'
+  }
+}
+</script>
+
+<script lang="ts" setup>
+import wuiIcon from '../wui-icon/wui-icon.vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
+import { isDef, objToStyle, pause, requestAnimationFrame } from '../common/util'
+import { useCell } from '../composables/useCell'
+import { FORM_KEY, type FormItemRule } from '../wui-form/types'
+import { useParent } from '../composables/useParent'
+import { useTranslate } from '../composables/useTranslate'
+import { inputProps } from './types'
+
+const props = defineProps(inputProps)
+const emit = defineEmits([
+  'update:modelValue',
+  'clear',
+  'change',
+  'blur',
+  'focus',
+  'input',
+  'keyboardheightchange',
+  'confirm',
+  'clicksuffixicon',
+  'clickprefixicon',
+  'click'
+])
+const { translate } = useTranslate('input')
+
+const isPwdVisible = ref<boolean>(false)
+const clearing = ref<boolean>(false) // 是否正在清空操作，避免重复触发失焦
+const focused = ref<boolean>(false) // 控制聚焦
+const focusing = ref<boolean>(false) // 当前是否激活状态
+const inputValue = ref<string | number>('') // 输入框的值
+const cell = useCell()
+
+watch(
+  () => props.focus,
+  (newValue) => {
+    focused.value = newValue
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    inputValue.value = isDef(newValue) ? String(newValue) : ''
+  },
+  { immediate: true, deep: true }
+)
+
+const { parent: form } = useParent(FORM_KEY)
+
+const placeholderValue = computed(() => {
+  return isDef(props.placeholder) ? props.placeholder : translate('placeholder')
+})
+
+/**
+ * 展示清空按钮
+ */
+const showClear = computed(() => {
+  const { disabled, readonly, clearable, clearTrigger } = props
+  if (clearable && !readonly && !disabled && inputValue.value && (clearTrigger === 'always' || (props.clearTrigger === 'focus' && focusing.value))) {
+    return true
+  } else {
+    return false
+  }
+})
+
+/**
+ * 展示字数统计
+ */
+const showWordCount = computed(() => {
+  const { disabled, readonly, maxlength, showWordLimit } = props
+  return Boolean(!disabled && !readonly && isDef(maxlength) && maxlength > -1 && showWordLimit)
+})
+
+/**
+ * 表单错误提示信息
+ */
+const errorMessage = computed(() => {
+  if (form && props.prop && form.errorMessages && form.errorMessages[props.prop]) {
+    return form.errorMessages[props.prop]
+  } else {
+    return ''
+  }
+})
+
+// 是否展示必填
+const isRequired = computed(() => {
+  let formRequired = false
+  if (form && form.props.rules) {
+    const rules = form.props.rules
+    for (const key in rules) {
+      if (Object.prototype.hasOwnProperty.call(rules, key) && key === props.prop && Array.isArray(rules[key])) {
+        formRequired = rules[key].some((rule: FormItemRule) => rule.required)
+      }
+    }
+  }
+  return props.required || props.rules.some((rule) => rule.required) || formRequired
+})
+
+const rootClass = computed(() => {
+  return `wui-input  ${props.label || props.useLabelSlot ? 'is-cell' : ''} ${props.center ? 'is-center' : ''} ${
+    cell.border.value ? 'is-border' : ''
+  } ${props.size ? 'is-' + props.size : ''} ${props.error ? 'is-error' : ''} ${props.disabled ? 'is-disabled' : ''}  ${
+    inputValue.value && String(inputValue.value).length > 0 ? 'is-not-empty' : ''
+  }  ${props.noBorder ? 'is-no-border' : ''} ${props.customClass}`
+})
+
+const labelClass = computed(() => {
+  return `wui-input__label ${props.customLabelClass} ${isRequired.value ? 'is-required' : ''}`
+})
+
+const inputPlaceholderClass = computed(() => {
+  return `wui-input__placeholder  ${props.placeholderClass}`
+})
+
+const labelStyle = computed(() => {
+  return props.labelWidth
+    ? objToStyle({
+        'min-width': props.labelWidth,
+        'max-width': props.labelWidth
+      })
+    : ''
+})
+
+onBeforeMount(() => {
+  initState()
+})
+
+// 状态初始化
+function initState() {
+  inputValue.value = formatValue(inputValue.value)
+  emit('update:modelValue', inputValue.value)
+}
+
+function formatValue(value: string | number) {
+  const { maxlength } = props
+  if (isDef(maxlength) && maxlength !== -1 && String(value).length > maxlength) {
+    return value.toString().slice(0, maxlength)
+  }
+  return value
+}
+
+function togglePwdVisible() {
+  isPwdVisible.value = !isPwdVisible.value
+}
+function handleClear() {
+  clearing.value = true
+  focusing.value = false
+  inputValue.value = ''
+  if (props.focusWhenClear) {
+    focused.value = false
+  }
+  requestAnimationFrame(() => {
+    if (props.focusWhenClear) {
+      focused.value = true
+      focusing.value = true
+    }
+    emit('change', {
+      value: ''
+    })
+    emit('update:modelValue', inputValue.value)
+    emit('clear')
+  })
+}
+async function handleBlur() {
+  // 等待150毫秒，clear执行完毕
+  await pause(150)
+  if (clearing.value) {
+    clearing.value = false
+    return
+  }
+  focusing.value = false
+  emit('blur', {
+    value: inputValue.value
+  })
+}
+function handleFocus({ detail }: any) {
+  focusing.value = true
+  emit('focus', detail)
+}
+function handleInput({ detail }: any) {
+  emit('update:modelValue', inputValue.value)
+  emit('input', detail)
+}
+function handleKeyboardheightchange({ detail }: any) {
+  emit('keyboardheightchange', detail)
+}
+function handleConfirm({ detail }: any) {
+  emit('confirm', detail)
+}
+function onClickSuffixIcon() {
+  emit('clicksuffixicon')
+}
+function onClickPrefixIcon() {
+  emit('clickprefixicon')
+}
+function handleClick(event: MouseEvent) {
+  emit('click', event)
+}
+</script>
+
+<style lang="scss" scoped>
+@import './index.scss';
+</style>

@@ -1,0 +1,285 @@
+@import "./../common/abstracts/_mixin.scss";
+@import "./../common/abstracts/variable.scss";
+
+.wui-theme-dark {
+  @include b(checkbox) {
+    @include e(shape) {
+      background: transparent;
+      border-color: $-checkbox-border-color;
+      color: $-checkbox-check-color;
+    }
+
+    @include e(label) {
+      color: $-dark-color;
+    }
+
+    @include when(disabled) {
+      .wui-checkbox__shape {
+        border-color: $-dark-color-gray;
+        background: $-dark-background4;
+      }
+
+      .wui-checkbox__label {
+        color: $-dark-color-gray;
+      }
+
+      :deep(.wui-checkbox__check) {
+        color: $-dark-color-gray;
+      }
+
+      @include when(checked) {
+        .wui-checkbox__shape {
+          color: $-dark-color-gray;
+        }
+
+        .wui-checkbox__label {
+          color: $-dark-color-gray;
+        }
+      }
+
+      @include when(button) {
+
+        .wui-checkbox__label {
+          border-color: #c8c9cc;
+          background: #3a3a3c;
+          color: $-dark-color-gray;
+        }
+
+        @include when(checked) {
+          .wui-checkbox__label {
+            border-color: #c8c9cc;
+            background: #3a3a3c;
+            color: #c8c9cc;
+          }
+        }
+      }
+    }
+
+    @include when(button) {
+      .wui-checkbox__label {
+        background-color: $-dark-background;
+      }
+
+      @include when(checked) {
+        .wui-checkbox__label {
+          background-color: $-dark-background2;
+        }
+      }
+    }
+
+  }
+}
+
+@include b(checkbox) {
+  display: block;
+  margin-bottom: $-checkbox-margin;
+  font-size: 0;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.2;
+
+  @include when(last-child) {
+    margin-bottom: 0;
+  }
+
+  @include e(shape) {
+    position: relative;
+    display: inline-block;
+    width: $-checkbox-size;
+    height: $-checkbox-size;
+    border: 2px solid $-checkbox-border-color;
+    border-radius: 50%;
+    color: $-checkbox-check-color;
+    background: $-checkbox-bg;
+    vertical-align: middle;
+    transition: background 0.2s;
+    box-sizing: border-box;
+
+    @include when(square) {
+      border-radius: $-checkbox-square-radius;
+    }
+  }
+
+  @include e(input) {
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin: 0;
+    opacity: 0;
+  }
+
+  @include edeep(btn-check) {
+    display: inline-block;
+    font-size: $-checkbox-icon-size;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  @include e(txt) {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 20px;
+    @include lineEllipsis;
+  }
+
+  @include e(label) {
+    position: relative;
+    display: inline-block;
+    margin-left: $-checkbox-label-margin;
+    vertical-align: middle;
+    font-size: $-checkbox-label-fs;
+    color: $-checkbox-label-color;
+  }
+
+  @include edeep(check) {
+    color: $-checkbox-check-color;
+    font-size: $-checkbox-icon-size;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  @include when(checked) {
+    .wui-checkbox__shape {
+      color: $-checkbox-checked-color;
+      background: currentColor;
+      border-color: currentColor;
+    }
+
+    :deep(.wui-checkbox__check) {
+      opacity: 1;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @include when(button) {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: $-checkbox-margin;
+    vertical-align: top;
+    font-size: $-checkbox-button-font-size;
+
+    @include when(last-child) {
+      margin-right: 0;
+    }
+
+    .wui-checkbox__shape {
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+      border: none;
+    }
+
+    .wui-checkbox__label {
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      min-width: $-checkbox-button-min-width;
+      height: $-checkbox-button-height;
+      font-size: $-checkbox-button-font-size;
+      margin-left: 0;
+      padding: 5px 15px;
+      border: 1px solid $-checkbox-button-border;
+      background-color: $-checkbox-button-bg;
+      border-radius: $-checkbox-button-radius;
+      transition: color 0.2s, border 0.2s;
+      box-sizing: border-box;
+    }
+
+    @include when(checked) {
+      .wui-checkbox__label {
+        color: $-checkbox-checked-color;
+        background-color: $-checkbox-bg;
+        border-color: $-checkbox-checked-color;
+        border-color: currentColor;
+      }
+    }
+  }
+
+  @include when(inline) {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: $-checkbox-margin;
+
+    @include when(last-child) {
+      margin-right: 0;
+    }
+  }
+
+  @include when(disabled) {
+    .wui-checkbox__shape {
+      border-color: $-checkbox-border-color;
+      background: $-checkbox-disabled-check-bg;
+    }
+
+    .wui-checkbox__label {
+      color: $-checkbox-disabled-label-color;
+    }
+
+    @include when(checked) {
+      .wui-checkbox__shape {
+        color: $-checkbox-disabled-check-color;
+      }
+
+      .wui-checkbox__label {
+        color: $-checkbox-disabled-label-color;
+      }
+    }
+
+    @include when(button) {
+      .wui-checkbox__label {
+        background: $-checkbox-disabled-color;
+        border-color: $-checkbox-button-border;
+        color: $-checkbox-disabled-label-color;
+      }
+
+      @include when(checked) {
+        .wui-checkbox__label {
+          border-color: $-checkbox-button-disabled-border;
+        }
+      }
+    }
+  }
+
+  // 以下内容用于解决父子组件样式隔离的问题 —— START
+  @include when(cell-box) {
+    padding: 13px 15px;
+    margin: 0;
+
+    @include when(large) {
+      padding: 14px 15px;
+    }
+  }
+
+  @include when(button-box) {
+    display: inline-flex;
+    width: 33.3333%;
+    padding: 12px 12px 0 0;
+    box-sizing: border-box;
+
+    .wui-checkbox__label {
+      width: 100%;
+    }
+
+    &:last-child::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+
+  @include when(large) {
+    .wui-checkbox__shape {
+      width: $-checkbox-large-size;
+      height: $-checkbox-large-size;
+      font-size: $-checkbox-large-size;
+    }
+
+    .wui-checkbox__label {
+      font-size: $-checkbox-large-label-fs;
+    }
+  }
+}

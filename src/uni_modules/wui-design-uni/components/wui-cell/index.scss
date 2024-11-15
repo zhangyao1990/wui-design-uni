@@ -1,0 +1,189 @@
+@import '../common/abstracts/variable.scss';
+@import '../common/abstracts/_mixin.scss';
+
+.wui-theme-dark {
+  @include b(cell) {
+    background-color: $-dark-background2;
+    color: $-dark-color;
+
+    @include e(value) {
+      color: $-dark-color3;
+    }
+
+    @include e(label) {
+      color: $-dark-color3;
+    }
+
+    @include when(hover) {
+      background-color: $-dark-background4;
+    }
+
+    @include when(border) {
+      .wui-cell__wrapper {
+        @include halfPixelBorder('top', 0, $-dark-border-color);
+      }
+    }
+
+    :deep(.wui-cell__arrow-right) {
+      color: $-dark-color;
+    }
+  }
+}
+
+@include b(cell) {
+  position: relative;
+  padding-left: $-cell-padding;
+  background-color: $-color-white;
+  text-decoration: none;
+  color: $-cell-title-color;
+  line-height: $-cell-line-height;
+  -webkit-tap-highlight-color: transparent;
+
+  @include when(border) {
+    .wui-cell__wrapper {
+      @include halfPixelBorder('top');
+    }
+  }
+
+  @include e(wrapper) {
+    position: relative;
+    display: flex;
+    padding: $-cell-wrapper-padding $-cell-padding $-cell-wrapper-padding 0;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @include when(vertical) {
+      display: block;
+
+      .wui-cell__right {
+        margin-top: $-cell-vertical-top;
+      }
+
+      .wui-cell__value {
+        text-align: left;
+      }
+
+      .wui-cell__left {
+        margin-right: 0;
+      }
+    }
+
+    @include when(label) {
+      padding: $-cell-wrapper-padding-with-label $-cell-padding $-cell-wrapper-padding-with-label 0;
+    }
+  }
+
+  @include e(left) {
+    position: relative;
+    flex: 1;
+    display: flex;
+    text-align: left;
+    font-size: $-cell-title-fs;
+    box-sizing: border-box;
+    margin-right: $-cell-padding;
+
+    @include when(required) {
+      padding-left: 12px;
+
+      &::after {
+        position: absolute;
+        content: '*';
+        top: 0;
+        left: 0;
+        font-size: $-cell-required-size;
+        color: $-cell-required-color;
+      }
+    }
+  }
+
+  @include e(right) {
+    position: relative;
+    flex: 1;
+  }
+
+  @include e(title) {
+    flex: 1;
+    width: 100%;
+    font-size: $-cell-title-fs;
+  }
+
+  @include e(label) {
+    margin-top: 2px;
+    font-size: $-cell-label-fs;
+    color: $-cell-label-color;
+    @include lineEllipsis;
+  }
+
+  @include edeep(icon) {
+    display: block;
+    position: relative;
+    margin-right: $-cell-icon-right;
+    font-size: $-cell-icon-size;
+    height: $-cell-line-height;
+    line-height: $-cell-line-height;
+  }
+
+  @include e(body){
+    display: flex;
+  }
+
+  @include e(value) {
+    position: relative;
+    flex: 1;
+    font-size: $-cell-value-fs;
+    color: $-cell-value-color;
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  @include edeep(arrow-right) {
+    display: block;
+    margin-left: 8px;
+    width: $-cell-arrow-size;
+    font-size: $-cell-arrow-size;
+    color: $-cell-arrow-color;
+    height: $-cell-line-height;
+    line-height: $-cell-line-height;
+  }
+
+  @include e(error-message){
+    color: $-form-item-error-message-color;
+    font-size: $-form-item-error-message-font-size;
+    line-height: $-form-item-error-message-line-height;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  @include when(link) {
+    -webkit-tap-highlight-color: $-cell-tap-bg;
+  }
+
+  @include when(hover) {
+    background-color: $-cell-tap-bg;
+  }
+
+  @include when(large) {
+    .wui-cell__title {
+      font-size: $-cell-title-fs-large;
+    }
+
+    .wui-cell__wrapper {
+      padding-top: $-cell-wrapper-padding-large;
+      padding-bottom: $-cell-wrapper-padding-large;
+    }
+
+    .wui-cell__label {
+      font-size: $-cell-label-fs-large;
+    }
+
+    :deep(.wui-cell__icon) {
+      font-size: $-cell-icon-size-large;
+    }
+  }
+
+  @include when(center) {
+    .wui-cell__wrapper {
+      align-items: center;
+    }
+  }
+}

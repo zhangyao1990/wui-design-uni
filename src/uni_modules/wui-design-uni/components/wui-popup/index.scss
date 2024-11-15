@@ -1,0 +1,84 @@
+@import './../common/abstracts/_mixin.scss';
+@import './../common/abstracts/variable.scss';
+
+.wui-theme-dark {
+  @include b(popup-wrapper) {
+    :deep() {
+      .wui-popup {
+        background: $-dark-background2;
+      }
+
+      .wui-popup__close {
+        color: $-dark-color;
+      }
+    }
+  }
+}
+
+@include b(popup-wrapper) {
+  :deep() {
+    .wui-popup {
+      position: fixed;
+      max-height: 100%;
+      overflow-y: auto;
+      background: #fff;
+    }
+  }
+}
+
+
+@include b(popup) {
+  @include edeep(close) {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: $-popup-close-color;
+    font-size: $-popup-close-size;
+    transform: rotate(-45deg);
+  }
+
+  @include mdeep(center) {
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    transform-origin: 0% 0%;
+
+    &.wui-zoom-in-enter,
+    &.wui-zoom-in-leave-to {
+      transform: scale(0.8) translate3d(-50%, -50%, 0) !important;
+    }
+
+    @include when(deep) {
+
+      &.wui-zoom-in-enter,
+      &.wui-zoom-in-leave-to {
+        transform: scale(0.1) translate3d(-50%, -50%, 0) !important;
+      }
+    }
+
+  }
+
+  @include mdeep(left) {
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  @include mdeep(right) {
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  @include mdeep(top) {
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  @include mdeep(bottom) {
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
